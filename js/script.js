@@ -19,11 +19,29 @@ for (let i = 0; i < columns; i++) {
     drops[i] = Math.random() * -100;
 }
 
-// Animation speed control - lower value means slower speed
-const rainSpeed = 1.0; // Reduced from default 1.0
+// Parallax effect variables
+let mouseX = 0;
+let mouseY = 0;
+let targetX = 0;
+let targetY = 0;
+let parallaxFactor = 0.05; // Controls parallax intensity
 
-// Draw the Matrix rain
+// Track mouse position for parallax effect
+document.addEventListener('mousemove', (e) => {
+    // Calculate mouse position relative to center of screen
+    mouseX = (e.clientX - window.innerWidth / 2) * parallaxFactor;
+    mouseY = (e.clientY - window.innerHeight / 2) * parallaxFactor;
+});
+
+// Animation speed control - lower value means slower speed
+const rainSpeed = 1.0;
+
+// Draw the Matrix rain with parallax effect
 function drawMatrixRain() {
+    // Smooth transition to target parallax position
+    targetX += (mouseX - targetX) * 0.05;
+    targetY += (mouseY - targetY) * 0.05;
+    
     // Add a slight translucent black rectangle on top of previous frame
     ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -33,22 +51,30 @@ function drawMatrixRain() {
 
     // Loop through each drop
     for (let i = 0; i < drops.length; i++) {
+        // Apply parallax offset based on column position
+        // Columns in the center have less movement than those at the edges
+        const parallaxDepth = Math.abs((i / columns) - 0.5) * 2; // 0-1 depth factor
+        const xOffset = targetX * parallaxDepth;
+        const yOffset = targetY * parallaxDepth;
+        
         // Choose a random character
         const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
         
-        // Draw the character
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        // Draw the character with parallax offset
+        ctx.fillText(text, (i * fontSize) + xOffset, (drops[i] * fontSize) + yOffset);
         
-        // Move the drop down (slower speed now)
+        // Move the drop down
         drops[i] += rainSpeed;
         
-        // Randomly reset a drop to the top (reduced probability for slower effect)
+        // Randomly reset a drop to the top
         if (drops[i] * fontSize > canvas.height && Math.random() > 0.99) {
             drops[i] = 0;
         }
         
-        // Vary the green brightness to create depth
-        ctx.fillStyle = `rgba(0, ${Math.floor(Math.random() * 255)}, 0, 0.8)`;
+        // Create depth effect with varying brightness
+        // Columns with higher parallaxDepth are brighter (appear closer)
+        const brightness = Math.floor(150 + (100 * parallaxDepth));
+        ctx.fillStyle = `rgba(0, ${brightness}, 0, 0.8)`;
     }
 }
 
@@ -72,11 +98,29 @@ window.addEventListener('load', () => {
     requestAnimationFrame(animateMatrixRain);
 });
 
-// Ensure the canvas stays fullscreen
+// Ensure the canvas stays fullscreen and update parallax calculations on resize
 window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    
+    // Recalculate number of columns
+    const columns = Math.floor(canvas.width / fontSize);
+    
+    // Reset parallax targets on resize
+    mouseX = 0;
+    mouseY = 0;
+    targetX = 0;
+    targetY = 0;
 });
+
+// Mobile-specific parallax using device orientation
+window.addEventListener('deviceorientation', (event) => {
+    if (event.beta && event.gamma) {
+        // Use device tilt for parallax on mobile
+        mouseX = (event.gamma / 45) * window.innerWidth * parallaxFactor;
+        mouseY = (event.beta / 45) * window.innerHeight * parallaxFactor;
+    }
+}, true);
 
 // Mobile navigation toggle
 const menuToggle = document.querySelector('.menu-toggle');
@@ -283,13 +327,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Enhance Matrix effect on hover over hero section
     const heroSection = document.querySelector('.hero');
     heroSection.addEventListener('mouseenter', () => {
-        // Increase the speed of the falling characters (but still slower than original)
+        // Increase parallax sensitivity when hovering over hero
+        parallaxFactor = 0.1;
+        
+        // Increase the speed of the falling characters
         for (let i = 0; i < drops.length; i++) {
             drops[i] += 0.2;
         }
     });
     
     heroSection.addEventListener('mouseleave', () => {
+        // Reset parallax sensitivity
+        parallaxFactor = 0.05;
+        
         // Reset the speed
         for (let i = 0; i < drops.length; i++) {
             if (drops[i] > 0) {
