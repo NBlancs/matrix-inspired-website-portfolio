@@ -879,3 +879,54 @@ footer p {
         font-size: 1rem;
     }
 }
+
+/* Profile Image Styling */
+.profile-container {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.profile-image {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--matrix-green);
+    box-shadow: 0 0 20px var(--matrix-green);
+    transition: all 0.3s ease;
+    animation: pulse 2s infinite;
+}
+
+.profile-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px var(--matrix-green);
+    filter: brightness(1.2);
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 255, 0, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
+    }
+}
+
+/* Responsive adjustments for profile image */
+@media (max-width: 768px) {
+    .profile-image {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-image {
+        width: 120px;
+        height: 120px;
+    }
+}
