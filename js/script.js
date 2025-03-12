@@ -369,3 +369,264 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// Certificate slider functionality
+document.addEventListener('DOMContentLoaded', () => {
+    // Certificate data
+    const certificates = [
+        { 
+            path: 'assets/Certificates/js-cert.png', 
+            title: 'The Origins III: JavaScript',
+            issuer: 'Codédex',
+            date: 'January 12, 2025',
+            type: 'image'
+        },
+        { 
+            path: 'assets/Certificates/certifice_devphil-1.png', 
+            title: 'Python Programming Basics to Advanced',
+            issuer: 'DEVSIGN Philippines',
+            date: '2023',
+            type: 'image'
+        },
+        { 
+            path: 'assets/Certificates/Sonder 2025_ Designing a Future that Lasts - Attendee Certificate-1.png', 
+            title: 'Sonder 2025: Google Dev World Tour in Indonesia',
+            issuer: 'Google Developer Groups on Campus',
+            date: 'January 11, 2024',
+            type: 'image'
+        },
+        { 
+            path: 'assets/Certificates/ph-vn-sonder-2025.png', 
+            title: 'Sonder 2025: Google Dev World Tour in Vietnam',
+            issuer: 'Google Developer Groups on Campus',
+            date: 'February 22, 2025',
+            type: 'image'
+        },
+        { 
+            path: 'assets/Certificates/Ignatian Leadership-1.png', 
+            title: 'Ignatian Leadership - Forming Leaders with Character',
+            issuer: 'Xavier University Senior High School - Ateneo De Cagayan',
+            date: 'January 12, 2022',
+            type: 'image'
+        },
+        { 
+            path: 'assets/Certificates/Human Rights and Development-1.png', 
+            title: 'Human Rights and Gender Development',
+            issuer: 'Xavier University Senior High School - Ateneo De Cagayan',
+            date: 'October 15, 2022',
+            type: 'image'
+        },
+        { 
+            path: 'assets/Certificates/Work Immersion 1-1.png', 
+            title: 'Work Immersion - Labor and Employment',
+            issuer: 'Department of Labor and Employment Region 10, Public Employment Service Office - CDO, and Xavier University Senior High School - Ateneo De Cagayan',
+            date: 'April 23, 2022',
+            type: 'image'
+        },
+        { 
+            path: 'assets/Certificates/Research Capacity Building-1.png', 
+            title: 'Research Capacity Building',
+            issuer: 'Xavier University Senior High School - Ateneo De Cagayan',
+            date: 'November 24, 2021',
+            type: 'image'
+        },
+        { 
+            path: 'assets/Certificates/Wonders of Waters Science Webinar - BLANCO, NOEL JHUMEL Certificate-1.png', 
+            title: 'Wonders of Water Science',
+            issuer: 'Xavier University Senior High School - Ateneo De Cagayan',
+            date: 'September 15, 2021',
+            type: 'image'
+        }
+    ];
+
+    const certificateTrack = document.querySelector('.certificate-track');
+    const dotsContainer = document.querySelector('.certificate-dots');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    
+    // If the certificate section isn't loaded yet, exit the function
+    if (!certificateTrack || !dotsContainer || !prevBtn || !nextBtn) return;
+    
+    let currentIndex = 0;
+    
+    // Create certificate elements
+    certificates.forEach((cert, index) => {
+        // Create certificate item
+        const certItem = document.createElement('div');
+        certItem.className = 'certificate-item';
+        
+        // Create certificate content based on type
+        if (cert.type === 'image') {
+            // Create image element
+            const img = document.createElement('img');
+            img.src = cert.path;
+            img.alt = cert.title;
+            img.addEventListener('click', () => showFullscreen(cert.path, cert.title, 'image'));
+            certItem.appendChild(img);
+        } else if (cert.type === 'pdf') {
+            // Create iframe for PDF
+            const iframe = document.createElement('iframe');
+            iframe.src = cert.path;
+            iframe.title = cert.title;
+            certItem.appendChild(iframe);
+            
+            // Add click handler for fullscreen PDF
+            certItem.addEventListener('click', () => showFullscreen(cert.path, cert.title, 'pdf'));
+        }
+        
+        // Create certificate overlay with info
+        const overlay = document.createElement('div');
+        overlay.className = 'certificate-overlay';
+        overlay.innerHTML = `
+            <h3>${cert.title}</h3>
+            <p>Issued by: ${cert.issuer}</p>
+            <p>Date: ${cert.date}</p>
+        `;
+        
+        // Append elements
+        certItem.appendChild(overlay);
+        certificateTrack.appendChild(certItem);
+        
+        // Create dot indicator
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        if (index === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => goToSlide(index));
+        dotsContainer.appendChild(dot);
+    });
+    
+    // Set initial transform
+    updateSliderPosition();
+    
+    // Handle next/prev buttons
+    prevBtn.addEventListener('click', () => {
+        currentIndex = Math.max(currentIndex - 1, 0);
+        updateSliderPosition();
+    });
+    
+    nextBtn.addEventListener('click', () => {
+        currentIndex = Math.min(currentIndex + 1, certificates.length - 1);
+        updateSliderPosition();
+    });
+    
+    // Go to specific slide
+    function goToSlide(index) {
+        currentIndex = index;
+        updateSliderPosition();
+    }
+    
+    // Update slider position
+    function updateSliderPosition() {
+        certificateTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
+        
+        // Update dots
+        document.querySelectorAll('.dot').forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentIndex);
+        });
+        
+        // Update button states
+        prevBtn.disabled = currentIndex === 0;
+        prevBtn.style.opacity = currentIndex === 0 ? '0.5' : '1';
+        nextBtn.disabled = currentIndex === certificates.length - 1;
+        nextBtn.style.opacity = currentIndex === certificates.length - 1 ? '0.5' : '1';
+    }
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+            currentIndex = Math.max(currentIndex - 1, 0);
+            updateSliderPosition();
+        } else if (e.key === 'ArrowRight') {
+            currentIndex = Math.min(currentIndex + 1, certificates.length - 1);
+            updateSliderPosition();
+        }
+    });
+    
+    // Fullscreen view functionality
+    function showFullscreen(path, title, type) {
+        // Create fullscreen container if it doesn't exist
+        let fullscreenView = document.querySelector('.fullscreen-view');
+        
+        if (!fullscreenView) {
+            fullscreenView = document.createElement('div');
+            fullscreenView.className = 'fullscreen-view';
+            
+            const content = document.createElement('div');
+            content.className = 'fullscreen-content';
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'close-fullscreen';
+            closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+            
+            closeBtn.addEventListener('click', () => {
+                fullscreenView.classList.remove('active');
+            });
+            
+            content.appendChild(closeBtn);
+            fullscreenView.appendChild(content);
+            document.body.appendChild(fullscreenView);
+        }
+        
+        // Get content container
+        const contentContainer = fullscreenView.querySelector('.fullscreen-content');
+        contentContainer.innerHTML = '';
+        
+        // Add close button
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'close-fullscreen';
+        closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        closeBtn.addEventListener('click', () => {
+            fullscreenView.classList.remove('active');
+        });
+        contentContainer.appendChild(closeBtn);
+        
+        // Add content based on type
+        if (type === 'image') {
+            const img = document.createElement('img');
+            img.src = path;
+            img.alt = title;
+            contentContainer.appendChild(img);
+        } else if (type === 'pdf') {
+            const iframe = document.createElement('iframe');
+            iframe.src = path;
+            iframe.title = title;
+            contentContainer.appendChild(iframe);
+        }
+        
+        fullscreenView.classList.add('active');
+        
+        // Close on escape key
+        document.addEventListener('keydown', function handleEsc(e) {
+            if (e.key === 'Escape') {
+                fullscreenView.classList.remove('active');
+                document.removeEventListener('keydown', handleEsc);
+            }
+        });
+    }
+    
+    // Touch swipe support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    certificateTrack.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+    
+    certificateTrack.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+    
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        if (touchStartX - touchEndX > swipeThreshold) {
+            // Swipe left
+            currentIndex = Math.min(currentIndex + 1, certificates.length - 1);
+            updateSliderPosition();
+        } else if (touchEndX - touchStartX > swipeThreshold) {
+            // Swipe right
+            currentIndex = Math.max(currentIndex - 1, 0);
+            updateSliderPosition();
+        }
+    }
+});

@@ -675,3 +675,207 @@ footer p {
         width: 90%;
     }
 }
+
+/* Certificate Section */
+.certificates {
+    background-color: rgba(0, 15, 0, 0.9);
+    position: relative;
+}
+
+.certificate-slider {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.certificate-container {
+    width: 80%;
+    height: 500px;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 2px solid var(--matrix-green);
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+    position: relative;
+}
+
+.certificate-track {
+    display: flex;
+    transition: transform 0.5s ease;
+    height: 100%;
+}
+
+.certificate-item {
+    min-width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.certificate-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background-color: rgba(0, 20, 0, 0.7);
+    padding: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.certificate-item iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: rgba(0, 20, 0, 0.7);
+}
+
+.certificate-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: var(--matrix-green);
+    padding: 1rem;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.certificate-item:hover .certificate-overlay {
+    transform: translateY(0);
+}
+
+.certificate-item:hover img {
+    transform: scale(1.02);
+}
+
+.slider-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 2px solid var(--matrix-green);
+    color: var(--matrix-green);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.slider-btn:hover {
+    background-color: var(--matrix-dark-green);
+    transform: scale(1.1);
+    box-shadow: 0 0 15px var(--matrix-green);
+}
+
+.certificate-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--matrix-gray);
+    border: 1px solid var(--matrix-green);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dot.active {
+    background-color: var(--matrix-green);
+    transform: scale(1.2);
+    box-shadow: 0 0 10px var(--matrix-green);
+}
+
+.fullscreen-view {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.fullscreen-view.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.fullscreen-content {
+    max-width: 90%;
+    max-height: 90%;
+    position: relative;
+}
+
+.fullscreen-content img,
+.fullscreen-content iframe {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border: 3px solid var(--matrix-green);
+}
+
+.fullscreen-content iframe {
+    width: 90vw;
+    height: 90vh;
+}
+
+.close-fullscreen {
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 2px solid var(--matrix-green);
+    color: var(--matrix-green);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Responsive adjustments for certificates */
+@media (max-width: 768px) {
+    .certificate-container {
+        width: 90%;
+        height: 400px;
+    }
+    
+    .slider-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .certificate-container {
+        width: 100%;
+        height: 300px;
+    }
+    
+    .certificate-overlay {
+        padding: 0.5rem;
+    }
+    
+    .certificate-overlay h3 {
+        font-size: 1rem;
+    }
+}
