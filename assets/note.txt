@@ -1,0 +1,1 @@
+# The dimensions of each photo should be 840 x 568
