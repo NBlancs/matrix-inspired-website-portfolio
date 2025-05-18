@@ -144,9 +144,8 @@ canvas#matrix-rain {
     position: relative;
     z-index: 2;
     padding: 2rem;
-    max-width: 800px;
+    max-width: 1200px;
     font-family: 'Loveletter', sans-serif;
-
 }
 
 h1 {
