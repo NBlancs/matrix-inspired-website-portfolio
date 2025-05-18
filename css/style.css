@@ -1,6 +1,13 @@
 /* Base Styles */
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;700&display=swap');
 
+@font-face {
+    font-family: 'Loveletter';
+    src: url('fonts/Loveletter Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 :root {
     --matrix-green: #0f0;
     --matrix-dark-green: #003b00;
@@ -138,6 +145,8 @@ canvas#matrix-rain {
     z-index: 2;
     padding: 2rem;
     max-width: 800px;
+    font-family: 'Loveletter', sans-serif;
+
 }
 
 h1 {
